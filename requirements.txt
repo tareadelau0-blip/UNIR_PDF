@@ -2,3 +2,4 @@ streamlit
 pypdf
 streamlit-sortables
 reportlab
+streamlit-js-eval
