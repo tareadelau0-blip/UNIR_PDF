@@ -1,81 +1,73 @@
 import streamlit as st
 from pypdf import PdfWriter
 import io
-import base64
 from streamlit_sortables import sort_items
 
-st.set_page_config(page_title="Unidor Pro - Contabilidad", layout="wide", page_icon="📄")
+# Configuración compacta
+st.set_page_config(page_title="Unidor PDF Express", page_icon="📄")
 
-# Título e Instrucciones
-st.title("📄 Unidor de PDFs - Vista Real")
-st.write("Si el visor no carga, usa el enlace de 'Abrir Vista Previa' que aparecerá abajo.")
+# Estética Profesional (Oscura/Minimalista como te gusta)
+st.markdown("""
+    <style>
+    .stApp { background-color: #121212; color: #e0e0e0; }
+    .stButton>button { width: 100%; background-color: #2c2c2c; color: white; border: 1px solid #444; }
+    .stButton>button:hover { background-color: #444; border-color: #007bff; }
+    </style>
+    """, unsafe_allow_html=True)
 
-# Función para limpiar la sesión
-def clear_session():
-    for key in st.session_state.keys():
-        del st.session_state[key]
+st.title("📄 Unidor de PDFs Contable")
+st.write("Herramienta rápida para anexos y partidas. Procesamiento 100% en RAM.")
 
-# 1. Selector de archivos
-uploaded_files = st.file_uploader("Sube tus archivos PDF", type="pdf", accept_multiple_files=True, key="uploader")
+# Función para resetear la aplicación
+if st.button("🗑️ Limpiar y Nueva Unión"):
+    st.session_state.clear()
+    st.rerun()
+
+st.divider()
+
+# 1. Zona de carga
+uploaded_files = st.file_uploader("Arrastra tus archivos aquí", type="pdf", accept_multiple_files=True)
 
 if uploaded_files:
+    # Diccionario para manejar los archivos
     files_dict = {f.name: f for f in uploaded_files}
     filenames = list(files_dict.keys())
 
-    col_control, col_preview = st.columns([1, 1.5])
+    st.subheader("↕️ Ordenar archivos")
+    st.caption("Arrastra los nombres para definir el orden final del documento:")
+    
+    # Interfaz de arrastrar y soltar
+    sorted_filenames = sort_items(filenames, direction="vertical", key="sort_pdf_list")
 
-    with col_control:
-        st.subheader("↕️ Ordenar y Unir")
-        # Herramienta de arrastrar
-        sorted_filenames = sort_items(filenames, direction="vertical", key="sortable")
-        
-        st.divider()
-        
-        # Selección para vista previa
-        selected_file = st.selectbox("🔍 Ver contenido de:", sorted_filenames)
-        
-        if st.button("🚀 GENERAR PDF UNIDO", use_container_width=True):
-            merger = PdfWriter()
-            for name in sorted_filenames:
-                merger.append(files_dict[name])
-            
-            output = io.BytesIO()
-            merger.write(output)
-            merger.close()
-            
-            st.success("¡PDF listo!")
-            st.download_button(
-                label="📥 DESCARGAR RESULTADO",
-                data=output.getvalue(),
-                file_name="UNIDO_CONTABLE.pdf",
-                mime="application/pdf",
-                use_container_width=True
-            )
-        
-        if st.button("🗑️ Limpiar todo", on_click=clear_session, use_container_width=True):
-            st.rerun()
+    st.divider()
 
-    with col_preview:
-        st.subheader("👁️ Visualizador")
-        if selected_file:
-            file_bytes = files_dict[selected_file].getvalue()
-            base64_pdf = base64.b64encode(file_bytes).decode('utf-8')
-            
-            # Formato compatible: Si el embed falla, el navegador mostrará un enlace de descarga automática
-            pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800" type="application/pdf"></iframe>'
-            
-            st.markdown(pdf_display, unsafe_allow_html=True)
-            
-            # BOTÓN DE RESPALDO: Si no se ve nada en el cuadro, este botón abre el PDF en una pestaña nueva
-            st.info("¿Cuadro en blanco? Haz clic abajo para ver el archivo:")
-            st.download_button(
-                label=f"📖 Abrir {selected_file} en ventana completa",
-                data=file_bytes,
-                file_name=selected_file,
-                mime="application/pdf"
-            )
+    # 2. Botón de Procesamiento
+    if st.button("🚀 UNIR Y DESCARGAR PDF"):
+        with st.spinner("Combinando documentos..."):
+            try:
+                merger = PdfWriter()
+                for name in sorted_filenames:
+                    merger.append(files_dict[name])
+                
+                # Crear el PDF en memoria
+                output = io.BytesIO()
+                merger.write(output)
+                merger.close()
+                
+                st.success("¡Unión completada!")
+                
+                # Botón de descarga
+                st.download_button(
+                    label="💾 Guardar Archivo Combinado",
+                    data=output.getvalue(),
+                    file_name="ANEXO_COMBINADO.pdf",
+                    mime="application/pdf"
+                )
+            except Exception as e:
+                st.error(f"Error al unir: {e}")
 
 else:
-    st.info("Sube tus archivos para comenzar a trabajar.")
+    st.info("Sube los archivos PDF que deseas combinar para habilitar el ordenamiento.")
 
-st.caption("Seguridad: Los archivos se procesan solo en la RAM de la sesión actual.")
+st.divider()
+st.caption("Seguridad: Esta herramienta es efímera. Al cerrar la pestaña, los datos desaparecen de la memoria del servidor.")
