@@ -1,10 +1,12 @@
-name: Unidor
+name: Unidor Efimero
 on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necesario para poder borrar
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -13,9 +15,16 @@ jobs:
         run: pip install pypdf
       - name: Merge
         run: python merge.py
-      - name: Upload
+      - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
           name: PDF_UNIDO
           path: FINAL.pdf
           retention-days: 1
+      - name: Borrar Temporales
+        run: |
+          git config --global user.name "Cleaner"
+          git config --global user.email "cleaner@github.com"
+          git rm *.pdf -f --ignore-unmatch
+          git commit -m "Limpieza automática de PDFs" || echo "Nada que borrar"
+          git push
