@@ -1,0 +1,16 @@
+{
+  "Compras 7 hl": {
+    "pos_x": 24.80, 
+    "pos_y": 1.5, 
+    "font_size": 11, 
+    "prefix": "Folio: ", 
+    "color": "#000000"
+  },
+  "Ventas 7 hl": {
+    "pos_x": 24.80, 
+    "pos_y": 1.50, 
+    "font_size": 11, 
+    "prefix": "Folio: ", 
+    "color": "#000000"
+  }
+}
