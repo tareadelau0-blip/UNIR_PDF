@@ -6,11 +6,18 @@
     "prefix": "Folio: ", 
     "color": "#000000"
   },
-  "Ventas 7 hl": {
+  "Ventas Consumidor Fianl 7 hl": {
     "pos_x": 24.80, 
-    "pos_y": 1.50, 
+    "pos_y": 1, 
     "font_size": 11, 
-    "prefix": "Folio: ", 
+    "prefix": " ", 
+    "color": "#000000"
+  },
+  "Ventas Contribuyentes 7 hl": {
+    "pos_x": 24.80, 
+    "pos_y": 1, 
+    "font_size": 11, 
+    "prefix": " ", 
     "color": "#000000"
   }
 }
