@@ -7,14 +7,14 @@
     "color": "#000000"
   },
   "Ventas Consumidor Fianl 7 hl": {
-    "pos_x": 24.80, 
+    "pos_x": 26, 
     "pos_y": 1, 
     "font_size": 11, 
     "prefix": " ", 
     "color": "#000000"
   },
   "Ventas Contribuyentes 7 hl": {
-    "pos_x": 24.80, 
+    "pos_x": 26, 
     "pos_y": 1, 
     "font_size": 11, 
     "prefix": " ", 
