@@ -40,7 +40,7 @@ if activar_folio:
     st.sidebar.subheader("📍 Posición y Estilo")
     
     # Sliders cargando valores del JSON
-    pos_x = st.sidebar.slider("X (cm desde izq.)", 0.0, 21.0, float(st.session_state.config.get('pos_x', 17.0)), step=0.1)
+    pos_x = st.sidebar.slider("X (cm desde izq.)", 0.0, 30.0, float(st.session_state.config.get('pos_x', 17.0)), step=0.1)
     pos_y = st.sidebar.slider("Y (cm desde arriba)", 0.0, 28.0, float(st.session_state.config.get('pos_y', 1.5)), step=0.1)
     f_size = st.sidebar.slider("Tamaño Fuente", 6, 36, int(st.session_state.config.get('font_size', 12)))
     prefix = st.sidebar.text_input("Prefijo", value=st.session_state.config.get('prefix', ""))
